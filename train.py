@@ -206,6 +206,33 @@ def myDataload_aptos(data_root=r'./data/aptos', csv_path=None, re_size=(300, 300
     return images, lables
 
 
+def myDataload_eyepacs(data_root=r'./data/eyepacs', csv_path=None, select=None, re_size=(300, 300)):
+    select_nums = [1500, 1000, 1500, 800, 700] if select is None else select
+    csv_path_u = '/'.join(csv_path.split('\\')) if platform.system() is not 'Windows' else csv_path
+    csv_file = pd.read_csv(csv_path_u)
+    df = pd.DataFrame(csv_file)
+    dfs = pd.DataFrame()
+    for i in range(5):
+        dft = df.loc[df['level'] == i]
+        dfs = dfs.append(dft.sample(select_nums[i]))
+    df = dfs
+    true_labels = df['level'].values.tolist()
+    samples = len(true_labels)
+    images = np.empty((samples, re_size[0], re_size[1], 3), dtype=np.uint8)
+    lables = np.empty(samples, dtype=np.float)
+
+    for i, p in enumerate(tqdm(df['image'])):
+        im_path = os.path.join(data_root, 'train', p + '.jpeg')
+        im_path = '/'.join(im_path.split('\\')) if platform.system() is not 'Windows' else im_path
+        img = cv2.imread(im_path)
+        img = imgPrep(img, re_size=re_size)
+        img = img.reshape(1, re_size[0], re_size[1], 3)
+        images[i, :, :, :] = img
+        lables[i] = int(true_labels[i])
+
+    return images, lables
+
+
 def my_model(model_type='effnet',
              model_output='regression',
              re_size=(300, 300),
@@ -256,8 +283,12 @@ def main(args):
     aptos_t_csv_path = os.path.join(aptos_root, 'train.csv')
     a_t_images, a_t_lables = myDataload_aptos(data_root=aptos_root, csv_path=aptos_t_csv_path,
                                               re_size=re_size)
-    t_images = np.concatenate((i_t_images, a_t_images))
-    t_lables = np.concatenate((i_t_lables, a_t_lables))
+    eyepacs_root = r'/home/td/Diabetic_Retinopat_Detection/data'
+    eyepacs_t_csv_path = os.path.join(eyepacs_root, 'trainLabels.csv')
+    e_t_images, e_t_lables = myDataload_eyepacs(data_root=eyepacs_root, csv_path=eyepacs_t_csv_path,
+                                               re_size=re_size)
+    t_images = np.concatenate((i_t_images, a_t_images, e_t_images))
+    t_lables = np.concatenate((i_t_lables, a_t_lables, e_t_lables))
     v_images = i_v_images
     v_lables = i_v_lables
 
