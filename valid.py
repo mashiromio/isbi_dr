@@ -153,7 +153,7 @@ def model_valid(model_path=None,
 if __name__ == "__main__":
 
     isbi_root = r'./data/isbi'
-    isbi_v_csv_path = os.path.join(isbi_root, r'regular-fundus-validation\regular-fundus-validation.csv')
+    isbi_v_csv_path = os.path.join(isbi_root, r'regular-fundus-validation/regular-fundus-validation.csv')
     csv_path_u = '/'.join(isbi_v_csv_path.split('\\')) if platform.system() is not 'Windows' else isbi_v_csv_path
     csv_file = pd.read_csv(csv_path_u)
     df = pd.DataFrame(csv_file)
