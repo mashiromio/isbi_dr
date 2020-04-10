@@ -204,5 +204,3 @@ if __name__ == "__main__":
         image_id.append(name.split('.')[0])
     df = pd.DataFrame(zip(image_id,y_pred), columns=['image_id', 'DR_Level'])
     df.to_csv(save_csv_path, index=False)
-
-
