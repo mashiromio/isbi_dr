@@ -283,7 +283,7 @@ def main(args):
     aptos_t_csv_path = os.path.join(aptos_root, 'train.csv')
     a_t_images, a_t_lables = myDataload_aptos(data_root=aptos_root, csv_path=aptos_t_csv_path,
                                               re_size=re_size)
-    eyepacs_root = r'/home/td/Diabetic_Retinopat_Detection/data'
+    eyepacs_root = r'./data/eyepacs'
     eyepacs_t_csv_path = os.path.join(eyepacs_root, 'trainLabels.csv')
     e_t_images, e_t_lables = myDataload_eyepacs(data_root=eyepacs_root, csv_path=eyepacs_t_csv_path,
                                                re_size=re_size)
